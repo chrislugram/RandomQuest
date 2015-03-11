@@ -1,0 +1,40 @@
+{
+    "es": {
+    	"mainmenu_english": "Inglés",
+		"mainmenu_spanish": "Español",
+		"mainmenu_dqs": "Sistema de dialogo e influencia",
+		"mainmenu_combat": "Combate RPG",
+		"mainmenu_email": "EMAIL",
+		"mainmenu_linkedin": "LINKEDIN",
+		"mainmenu_title": "Christian Lugo, Projecto demo",
+		"mainmenu_start": "Start",
+		"mainmenu_dqs_description": "En esta escena se han utilizado varias herramientas de gameplay centradas en el diálogo del jugador:
+		- Cámara que orbita alrededor del personaje
+		- Sistema de movimiento
+		- DQS. Es un sistema para crear diálogos dinámicos dependiendo de las elecciones del PJ. Además los PNJ se ven influenciados por las elecciones del jugador.",
+		"mainmenu_combat_description": "En esta escena se utilizan herramientas RPG centradas en el combate:
+		- Sistema de turnos
+		- Sistema de Tiradas aleatorias
+		- Sistema de movimiento en combate
+		Además para crear la escena se han creado un entorno 3D con assets gratuitos, pero los controladores de animaciones se han creado específicamente para la escena."
+    },
+	"en":{
+		"mainmenu_english": "English",
+		"mainmenu_spanish": "Español",
+		"mainmenu_dqs": "Sistema de dialogo e influencia",
+		"mainmenu_combat": "Combate RPG",
+		"mainmenu_email": "EMAIL",
+		"mainmenu_linkedin": "LINKEDIN",
+		"mainmenu_title": "Christian Lugo, Projecto demo",
+		"mainmenu_start": "Start",
+		"mainmenu_dqs_description": "En esta escena se han utilizado varias herramientas de gameplay centradas en el diálogo del jugador:
+		- Cámara que orbita alrededor del personaje
+		- Sistema de movimiento
+		- DQS. Es un sistema para crear diálogos dinámicos dependiendo de las elecciones del PJ. Además los PNJ se ven influenciados por las elecciones del jugador.",
+		"mainmenu_combat_description": "En esta escena se utilizan herramientas RPG centradas en el combate:
+		- Sistema de turnos
+		- Sistema de Tiradas aleatorias
+		- Sistema de movimiento en combate
+		Además para crear la escena se han creado un entorno 3D con assets gratuitos, pero los controladores de animaciones se han creado específicamente para la escena."
+	}
+}

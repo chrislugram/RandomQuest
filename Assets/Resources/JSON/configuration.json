@@ -1,0 +1,56 @@
+{
+  "pc_0":{
+    "name":"Black",
+    "strength": 1,
+    "dexterity": 1,
+    "mind": 1,
+    "perc_strength": 0,
+    "perc_dexterity": 0,
+    "perc_mind": 0,
+    "inventory":{
+      "right_hand":{
+		"type_item":0,
+        "type":1,
+        "name":"short sword",
+        "magic_attack":0,
+        "magic_damage":0,
+        "magic_defense":0
+      },
+      "left_hand":{},
+      "armor":{
+		"type_item":1,
+        "type":1,
+        "name":"old robe",
+        "magic_defense":0
+      }
+    }
+  },
+  "pc_1":{
+    "name":"White",
+    "strength": 1,
+    "dexterity": 1,
+    "mind": 1,
+    "perc_strength": 0,
+    "perc_dexterity": 0,
+    "perc_mind": 0,
+    "inventory":{
+      "right_hand":{
+		"type_item":0,
+        "type":2,
+        "name":"short bow",
+        "magic_attack":0,
+        "magic_damage":0,
+        "magic_defense":0
+      },
+      "left_hand":{},
+      "armor":{
+		"type_item":1,
+        "type":1,
+        "name":"old robe",
+        "magic_defense":0
+      }
+    }
+  },
+  "potions":2,
+  "general_inventory":[]
+}
