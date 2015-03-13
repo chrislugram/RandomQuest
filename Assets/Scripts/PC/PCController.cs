@@ -71,8 +71,8 @@ public class PCController : MonoBehaviour {
 	#endregion
 
 	#region METHODS_CUSTOM
-	private void FollowOtherPC(bool b){
+	/*private void FollowOtherPC(bool b){
 		movementPCController.Follow (BoardManager.PCSelected.GetComponent<MovementController>());
-	}
+	}*/
 	#endregion
 }

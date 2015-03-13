@@ -33,6 +33,10 @@ public class MovementController : MonoBehaviour {
 	public Vector3 LeftAnchor{
 		get{ return movementTransform.position - movementTransform.right.normalized; }
 	}
+
+	public bool IsStill{
+		get{ return (navMeshAgent.velocity.magnitude == 0); }
+	}
 	#endregion
 	
 	#region METHODS_UNITY
@@ -50,15 +54,19 @@ public class MovementController : MonoBehaviour {
 	#endregion
 	
 	#region METHODS_CUSTOM
-	public void Follow(MovementController followMovementController){
-		this.followMovementController = followMovementController;
+	public void GoToTransform(Transform target){
+		posDestination = target.position;
+	}
+
+	public void Stop(){
+		posDestination = movementTransform.position;
 	}
 
 	private void Move(){
 		//Follow the other PJ
-		if (BoardManager.FollowPCFlag && (followMovementController != null) && (followMovementController != this)){
+		/*if (BoardManager.FollowPCFlag && (followMovementController != null) && (followMovementController != this)){
 			posDestination = followMovementController.BackAnchor;
-		}
+		}*/
 
 		navMeshAgent.SetDestination (posDestination);
 
