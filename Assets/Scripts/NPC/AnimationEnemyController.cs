@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 /// <summary>
@@ -13,11 +14,19 @@ public class AnimationEnemyController : MonoBehaviour {
 	
 	#region FIELDS
 	public Animator				animator;
+	public EventAnimation		eventAnimation;
 
 	private MovementController 	movementController;
 	#endregion
 	
 	#region ACCESSORS
+	public bool		HasEmptyAction{
+		get{ return (eventAnimation.eventAnimationAction == null); }
+	}
+
+	public Action	EventAnimationAction{
+		set{ eventAnimation.eventAnimationAction = value; }
+	}
 	#endregion
 	
 	#region METHODS_UNITY

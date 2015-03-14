@@ -172,6 +172,10 @@ public class SimpleAIEnemy : BTree {
 	private void AttackAction(){
 		animationController.Attack (true);
 		movementController.Stop ();
+
+		if (animationController.HasEmptyAction){
+			animationController.EventAnimationAction = AttakToPC;
+		}
 	}
 
 //Approach
@@ -198,6 +202,10 @@ public class SimpleAIEnemy : BTree {
 	#region METHODS_EVENT
 	private void DetectPC(GameObject pcGO){
 		this.pcController = pcGO.GetComponent<PCController>();
+	}
+
+	private void AttakToPC(){
+		Debug.Log ("Ataco al PC ");
 	}
 	#endregion
 }
