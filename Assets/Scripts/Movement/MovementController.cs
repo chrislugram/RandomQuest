@@ -1,19 +1,31 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MovementController : MonoBehaviour {
 	#region STATIC_ENUM_CONSTANTS
+	public static readonly float				NEAR_LIMIT	= 0.2f;
+
+	public enum ANCHOR_TYPE{
+		FRONT	= 0,
+		BACK	= 1,
+		RIGHT	= 2,
+		LEFT	= 3,
+		NONE	= 4
+	}
 	#endregion
 	
 	#region FIELDS
-	public event Action<float>	onMove = delegate{};
-	public Vector3				posDestination;
-	public float				distanceFollow = 1.5f;
+	public event Action<float>					onMove = delegate{};
+	public Vector3								posDestination;
+	public float								distanceFollow = 1.5f;
 
-	private NavMeshAgent		navMeshAgent;
-	private Transform			movementTransform;
-	private MovementController	followMovementController;
+	private NavMeshAgent						navMeshAgent;
+	private Transform							movementTransform;
+	private MovementController					followMovementController;
+	private Dictionary<Transform, ANCHOR_TYPE>	transformInAnchors;		
+	private Transform							lookAtTransform;
 	#endregion
 	
 	#region ACCESSORS
@@ -37,6 +49,10 @@ public class MovementController : MonoBehaviour {
 	public bool IsStill{
 		get{ return (navMeshAgent.velocity.magnitude == 0); }
 	}
+
+	public bool IsSurrounded{
+		get{ return (transformInAnchors.Count >= 4); } 
+	}
 	#endregion
 	
 	#region METHODS_UNITY
@@ -44,6 +60,8 @@ public class MovementController : MonoBehaviour {
 		navMeshAgent = GetComponent<NavMeshAgent> ();
 		posDestination = this.transform.position;
 		movementTransform = this.transform;
+
+		transformInAnchors = new Dictionary<Transform, ANCHOR_TYPE> ();
 	}
 
 	void Update(){
@@ -54,21 +72,65 @@ public class MovementController : MonoBehaviour {
 	#endregion
 	
 	#region METHODS_CUSTOM
-	public void GoToTransform(Transform target){
+	public void GoTo(Transform target){
 		posDestination = target.position;
+	}
+
+	public void GoTo(Vector3 targetPos){
+		posDestination = targetPos;
 	}
 
 	public void Stop(){
 		posDestination = movementTransform.position;
 	}
 
-	private void Move(){
-		//Follow the other PJ
-		/*if (BoardManager.FollowPCFlag && (followMovementController != null) && (followMovementController != this)){
-			posDestination = followMovementController.BackAnchor;
-		}*/
+	public bool IsNearTo(MovementController movController){
+		//Debug.Log ("Distance to Anchor: " + Vector3.Distance (movementTransform.position, movController.GetAnchor (movementTransform)));
+		return (Vector3.Distance(movementTransform.position, movController.GetAnchor(movementTransform)) <= NEAR_LIMIT);
+	}
 
+	public void LookAt(Transform target){
+		lookAtTransform = target;
+	}
+
+	/// <summary>
+	/// Gets the anchor. If target don't have an anchor, assign it one. If yes get anchor of the dictionary
+	/// </summary>
+	public Vector3 GetAnchor(Transform target){
+		ANCHOR_TYPE anchor = ANCHOR_TYPE.NONE;
+		if (transformInAnchors.ContainsKey(target)){
+			anchor = transformInAnchors[target];
+		}else{
+			foreach(ANCHOR_TYPE aType in Enum.GetValues(typeof(ANCHOR_TYPE))){
+				if (aType != ANCHOR_TYPE.NONE && anchor == ANCHOR_TYPE.NONE && !transformInAnchors.ContainsValue(aType)){
+					anchor = aType;
+					transformInAnchors.Add(target, anchor);
+				}
+			}
+		}
+
+		if (anchor == ANCHOR_TYPE.BACK){
+			return BackAnchor;
+		}else if (anchor == ANCHOR_TYPE.FRONT){
+			return FrontAnchor;
+		}else if (anchor == ANCHOR_TYPE.LEFT){
+			return LeftAnchor;
+		}else if (anchor == ANCHOR_TYPE.RIGHT){
+			return RightAnchor;
+		}else{
+			Console.Warning("Anchor "+target.name+" is NONE");
+			return Vector3.zero;
+		}
+	}
+
+	private void Move(){
 		navMeshAgent.SetDestination (posDestination);
+
+		if (lookAtTransform != null){
+			Vector3 direction = (lookAtTransform.position - movementTransform.position).normalized;
+			Quaternion lookRotation = Quaternion.LookRotation(direction);
+			movementTransform.rotation = Quaternion.Slerp(movementTransform.rotation, lookRotation, Time.deltaTime * navMeshAgent.angularSpeed);
+		}
 
 		onMove (navMeshAgent.velocity.magnitude);
 	}

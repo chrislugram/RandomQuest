@@ -47,12 +47,14 @@ public class PCController : MonoBehaviour {
 	public int Health{
 		get{ return healthPCController.health; }
 	}
+
+	public bool IsSurrounded{
+		get{ return movementPCController.IsSurrounded; }
+	}
 	#endregion
 	
 	#region METHODS_UNITY
 	void Awake(){
-		//BoardManager.onSelectedPC += FollowOtherPC;
-
 		movementPCController = GetComponent<MovementController> ();
 		healthPCController = GetComponent<Health> ();
 	}
@@ -60,7 +62,6 @@ public class PCController : MonoBehaviour {
 	void OnDestroy(){
 		movementPCController = null;
 		healthPCController = null;
-		//BoardManager.onSelectedPC -= FollowOtherPC;
 	}
 	#endregion
 	
@@ -71,8 +72,5 @@ public class PCController : MonoBehaviour {
 	#endregion
 
 	#region METHODS_CUSTOM
-	/*private void FollowOtherPC(bool b){
-		movementPCController.Follow (BoardManager.PCSelected.GetComponent<MovementController>());
-	}*/
 	#endregion
 }

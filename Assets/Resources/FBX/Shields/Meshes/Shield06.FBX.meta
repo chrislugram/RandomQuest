@@ -3,7 +3,12 @@ guid: 22db802e7ae2d194e9b2a3efcff3a244
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: Box001
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 3
@@ -57,7 +62,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 1
+  animationType: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

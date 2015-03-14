@@ -23,14 +23,16 @@ public class SimpleAIEnemy : BTree {
 	#endregion
 	
 	#region FIELDS
-	public Vector2				movementTimes;
-	public Transform			pathParent;
+	public Vector2						movementTimes;
+	public Transform					pathParent;
 
-	public GameObject			pcGO = null;
-	public bool					isMoving = false;
+	public PCController					pcController = null;
+	public bool							isMoving = false;
 
-	private int					indexPointsPath = 0;
-	private MovementController	movementController;
+	private int							indexPointsPath = 0;
+	private MovementController			movementController;
+	private DetectorFOV					detectorController;
+	private AnimationEnemyController	animationController;
 	#endregion
 	
 	#region ACCESSORS
@@ -39,6 +41,9 @@ public class SimpleAIEnemy : BTree {
 	#region METHODS_UNITY
 	void Start(){
 		movementController = GetComponent<MovementController> ();
+		detectorController = GetComponent<DetectorFOV> ();
+		detectorController.onDetectElement += DetectPC;
+		animationController = GetComponent<AnimationEnemyController> ();
 
 		StartCoroutine ("ChangeMoving");
 	}
@@ -46,19 +51,9 @@ public class SimpleAIEnemy : BTree {
 
 	#region METHODS_CUSTOM
 	public override void InitTree (){
-		Node nodeFlank = new Node ((int)NODES.FLANK);
-		nodeFlank.nodeCondition = FlankCondition;
-		nodeFlank.nodeAction = FlankAction;
-
-		Node nodeDirect = new Node ((int)NODES.DIRECT);
-		nodeDirect.nodeCondition = DirectCondition;
-		nodeDirect.nodeAction = DirectAction;
-
 		Node nodeApproach = new Node ((int)NODES.APPROACH);
 		nodeApproach.nodeCondition = ApproachCondition;
 		nodeApproach.nodeAction = ApproachAction;
-		nodeApproach.AddChild (nodeDirect);
-		nodeApproach.AddChild (nodeFlank);
 
 		Node nodeAttack = new Node ((int)NODES.ATTACK);
 		nodeAttack.nodeCondition = AttackCondition;
@@ -99,15 +94,23 @@ public class SimpleAIEnemy : BTree {
 	public override void Destroy (){
 		StopCoroutine ("ChangeMoving");
 
+		movementController = null;
+		detectorController.onDetectElement -= DetectPC;
+		detectorController = null;
+		animationController = null;
+
 		base.Destroy ();
 	}
 
 //Peacefull
 	private bool PeacefulCondition(){
-		return (pcGO == null);
+		return (pcController == null);
 	}
 	
-	private void PeacefulAction(){}
+	private void PeacefulAction(){
+		animationController.Alert (false);
+		movementController.LookAt(null);
+	}
 
 //Still
 	private bool StillCondition(){
@@ -139,61 +142,46 @@ public class SimpleAIEnemy : BTree {
 			}
 		}
 
-		movementController.GoToTransform(pathParent.GetChild(indexPointsPath));
+		movementController.GoTo(pathParent.GetChild(indexPointsPath));
 	}
 
 //Alert
 	private bool AlertCondition(){
-		return false;
+		return (pcController != null);
 	}
 	
 	private void AlertAction(){
-		
+		animationController.Alert (true);
+		movementController.LookAt(pcController.transform);
 	}
 
 //WaitAttack
 	private bool WaitAttackCondition(){
-		return false;
+		return pcController.IsSurrounded;
 	}
 	
 	private void WaitAttackAction(){
-		
+		movementController.Stop ();
 	}
 
 //Attack
 	private bool AttackCondition(){
-		return false;
+		return (!pcController.IsSurrounded && movementController.IsNearTo(pcController.GetComponent<MovementController>()));
 	}
 	
 	private void AttackAction(){
-		
+		animationController.Attack (true);
+		movementController.Stop ();
 	}
 
 //Approach
 	private bool ApproachCondition(){
-		return false;
+		return (!pcController.IsSurrounded && !movementController.IsNearTo(pcController.GetComponent<MovementController>()));
 	}
 		
 	private void ApproachAction(){
-			
-	}
-
-//Direct
-	private bool DirectCondition(){
-		return false;
-	}
-	
-	private void DirectAction(){
-		
-	}
-
-//Flank
-	private bool FlankCondition(){
-		return false;
-	}
-
-	private void FlankAction(){
-
+		animationController.Attack (false);
+		movementController.GoTo (pcController.GetComponent<MovementController> ().GetAnchor (this.transform));
 	}
 
 	private IEnumerator ChangeMoving(){
@@ -204,6 +192,12 @@ public class SimpleAIEnemy : BTree {
 			isMoving = false;
 			yield return new WaitForSeconds(movementTimes.y);
 		}
+	}
+	#endregion
+
+	#region METHODS_EVENT
+	private void DetectPC(GameObject pcGO){
+		this.pcController = pcGO.GetComponent<PCController>();
 	}
 	#endregion
 }
