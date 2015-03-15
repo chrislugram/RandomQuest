@@ -2,39 +2,41 @@
     "es": {
     	"mainmenu_english": "Inglés",
 		"mainmenu_spanish": "Español",
-		"mainmenu_dqs": "Sistema de dialogo e influencia",
+		"mainmenu_dqs": "Sistema de diálogo e influencia",
 		"mainmenu_combat": "Combate RPG",
 		"mainmenu_email": "EMAIL",
 		"mainmenu_linkedin": "LINKEDIN",
 		"mainmenu_title": "Christian Lugo, Proyecto demo",
-		"mainmenu_start": "Start",
+		"mainmenu_start": "Comenzar",
 		"mainmenu_dqs_description": "En esta escena se han utilizado varias herramientas de gameplay centradas en el diálogo del jugador:
 		- Cámara que orbita alrededor del personaje
-		- Sistema de movimiento
+		- Sistema de movimiento creado con NavMesh
 		- DQS. Es un sistema para crear diálogos dinámicos dependiendo de las elecciones del PJ. Además los PNJ se ven influenciados por las elecciones del jugador.",
 		"mainmenu_combat_description": "En esta escena se utilizan herramientas RPG centradas en el combate:
 		- Sistema de turnos
 		- Sistema de Tiradas aleatorias
-		- Sistema de movimiento en combate
-		Además para crear la escena se han creado un entorno 3D con assets gratuitos, pero los controladores de animaciones se han creado específicamente para la escena."
+		- Controladores de animaciones
+		- Árboles de comportamiento para la AI del Enemigo
+		La escena se han creado con entornos 3D del Assets Store, pero los controladores de animaciones se han creado específicamente para la escena."
     },
 	"en":{
 		"mainmenu_english": "English",
-		"mainmenu_spanish": "Español",
-		"mainmenu_dqs": "Sistema de dialogo e influencia",
-		"mainmenu_combat": "Combate RPG",
+		"mainmenu_spanish": "spanish",
+		"mainmenu_dqs": "Dialog system and Influence",
+		"mainmenu_combat": "Combat RPG",
 		"mainmenu_email": "EMAIL",
 		"mainmenu_linkedin": "LINKEDIN",
-		"mainmenu_title": "Christian Lugo, Projecto demo",
+		"mainmenu_title": "Christian Lugo, Project demo",
 		"mainmenu_start": "Start",
-		"mainmenu_dqs_description": "En esta escena se han utilizado varias herramientas de gameplay centradas en el diálogo del jugador:
-		- Cámara que orbita alrededor del personaje
-		- Sistema de movimiento
-		- DQS. Es un sistema para crear diálogos dinámicos dependiendo de las elecciones del PJ. Además los PNJ se ven influenciados por las elecciones del jugador.",
-		"mainmenu_combat_description": "En esta escena se utilizan herramientas RPG centradas en el combate:
-		- Sistema de turnos
-		- Sistema de Tiradas aleatorias
-		- Sistema de movimiento en combate
-		Además para crear la escena se han creado un entorno 3D con assets gratuitos, pero los controladores de animaciones se han creado específicamente para la escena."
+		"mainmenu_dqs_description": "In this scene have been used some gameplay tools centered in the character dialogue:
+		- Camera orbiting of character
+		- Movement system, created with NavMesh
+		- DQS. It's a system for to create dynamic dialogues depending of PC elections. Also the NPCs are influenced by PC elections",
+		"mainmenu_combat_description": "In this scene have been used some RPG-combat tools:
+		- Turn system
+		- Manager of random numbers
+		- Animation controllers
+		- Generic behaviour trees for the enemy AI
+		The scene has been created with free models of Assets store, but the animation controllers have been created specificly by this demo."
 	}
 }

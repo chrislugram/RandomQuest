@@ -23,16 +23,16 @@ public class SimpleAIEnemy : BTree {
 	#endregion
 	
 	#region FIELDS
-	public Vector2						movementTimes;
+	public Vector2						movingTimes;
 	public Transform					pathParent;
 
 	public PCController					pcController = null;
 	public bool							isMoving = false;
-
-	private int							indexPointsPath = 0;
+	
 	private MovementController			movementController;
 	private DetectorFOV					detectorController;
 	private AnimationEnemyController	animationController;
+	private bool						newTurn;
 	#endregion
 	
 	#region ACCESSORS
@@ -45,7 +45,9 @@ public class SimpleAIEnemy : BTree {
 		detectorController.onDetectElement += DetectPC;
 		animationController = GetComponent<AnimationEnemyController> ();
 
-		StartCoroutine ("ChangeMoving");
+		TurnManager.onTurnBegin += OnTurnBegin;
+
+		StartCoroutine("ChangeMoving");
 	}
 	#endregion
 
@@ -99,6 +101,8 @@ public class SimpleAIEnemy : BTree {
 		detectorController = null;
 		animationController = null;
 
+		TurnManager.onTurnBegin -= OnTurnBegin;
+
 		base.Destroy ();
 	}
 
@@ -118,13 +122,6 @@ public class SimpleAIEnemy : BTree {
 	}
 	
 	private void StillAction(){
-		Debug.Log("StillAction");
-		if (!movementController.IsStill){
-			indexPointsPath--;
-			if (indexPointsPath < 0){
-				indexPointsPath = 0;
-			}
-		}
 		movementController.Stop();
 	}
 
@@ -134,15 +131,8 @@ public class SimpleAIEnemy : BTree {
 	}
 	
 	private void WalkAction(){
-		Debug.Log("WalkAction");
-		if (movementController.IsStill){
-			indexPointsPath++;
-			if (indexPointsPath >= pathParent.childCount){
-				indexPointsPath = 0;
-			}
-		}
-
-		movementController.GoTo(pathParent.GetChild(indexPointsPath));
+		//Debug.Log("WalkAction");
+		movementController.FollowPath(pathParent);
 	}
 
 //Alert
@@ -176,6 +166,11 @@ public class SimpleAIEnemy : BTree {
 		if (animationController.HasEmptyAction){
 			animationController.EventAnimationAction = AttakToPC;
 		}
+
+		if (newTurn){
+			animationController.NewTurn();
+			newTurn = false;
+		}
 	}
 
 //Approach
@@ -185,27 +180,31 @@ public class SimpleAIEnemy : BTree {
 		
 	private void ApproachAction(){
 		animationController.Attack (false);
-		movementController.GoTo (pcController.GetComponent<MovementController> ().GetAnchor (this.transform));
-	}
-
-	private IEnumerator ChangeMoving(){
-		while(true){
-			isMoving = true;
-			yield return new WaitForSeconds(movementTimes.x);
-
-			isMoving = false;
-			yield return new WaitForSeconds(movementTimes.y);
-		}
+		movementController.GoTo (pcController.GetComponent<MovementController> ().GetAnchor (this.transform), true);
 	}
 	#endregion
 
 	#region METHODS_EVENT
+	private IEnumerator ChangeMoving(){
+		while(true){
+			isMoving = true;
+			yield return new WaitForSeconds(movingTimes.x);
+
+			isMoving = false;
+			yield return new WaitForSeconds(movingTimes.y);
+		}
+	}
+
 	private void DetectPC(GameObject pcGO){
 		this.pcController = pcGO.GetComponent<PCController>();
 	}
 
 	private void AttakToPC(){
-		Debug.Log ("Ataco al PC ");
+		Debug.Log ("Ataco al PC "+Time.time);
+	}
+
+	private void OnTurnBegin(){
+		newTurn = true;
 	}
 	#endregion
 }

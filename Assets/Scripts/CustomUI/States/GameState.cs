@@ -53,6 +53,10 @@ public class GameState : StateApp {
 	#endregion
 
 	#region UI_EVENTS
+	public void OnBackButtonAction(){
+		rootApp.ChangeState (StateReferenceApp.TYPE_STATE.MAIN_MENU, AppScenes.SCENE_MAIN_MENU);
+	}
+
 	public void ReceiveDialog(DQSResponse resp){
 		Debug.Log("....abriendo dialogo");
 		response = resp;

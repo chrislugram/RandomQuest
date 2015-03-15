@@ -11,8 +11,6 @@ public class BTree : MonoBehaviour {
 	#endregion
 	
 	#region FIELDS
-	public float 	evaluateTimeStep = 0.2f;
-
 	protected Node	rootTree;
 	protected bool	destroyedTree;
 	#endregion
@@ -25,6 +23,10 @@ public class BTree : MonoBehaviour {
 		InitTree ();
 	}
 
+	void Update(){
+		UpdateTree();
+	}
+
 	void OnDestroy(){
 		if (!destroyedTree){
 			Destroy();
@@ -35,20 +37,13 @@ public class BTree : MonoBehaviour {
 	#region METHODS_CUSTOM
 	public virtual void InitTree(){
 		destroyedTree = false;
-
-		StartCoroutine ("Evaluate");
 	}
 
-	public virtual IEnumerator Evaluate(){
-		while(true){
-			yield return new WaitForSeconds(evaluateTimeStep);
-
-			rootTree.EvaluateNode ();
-		}
+	public virtual void UpdateTree(){
+		rootTree.EvaluateNode ();
 	}
 
 	public virtual void Destroy(){
-		StopCoroutine ("Evaluate");
 		rootTree.DestroyNode ();
 		destroyedTree = true;
 	}

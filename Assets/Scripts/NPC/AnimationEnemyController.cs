@@ -10,6 +10,7 @@ public class AnimationEnemyController : MonoBehaviour {
 	public static readonly string	PARAMETER_VELOCITY = "velocity";
 	public static readonly string	PARAMETER_DANGER = "danger";
 	public static readonly string	PARAMETER_ATTACK = "attack";
+	public static readonly string	PARAMETER_TURN_BEGIN = "turn_begin";
 	#endregion
 	
 	#region FIELDS
@@ -48,6 +49,10 @@ public class AnimationEnemyController : MonoBehaviour {
 
 	public void Alert(bool stateAlert){
 		animator.SetBool (PARAMETER_DANGER, stateAlert);
+	}
+
+	public void NewTurn(){
+		animator.SetTrigger (PARAMETER_TURN_BEGIN);
 	}
 	#endregion
 	

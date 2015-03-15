@@ -26,6 +26,9 @@ public class MovementController : MonoBehaviour {
 	private MovementController					followMovementController;
 	private Dictionary<Transform, ANCHOR_TYPE>	transformInAnchors;		
 	private Transform							lookAtTransform;
+	private Transform							parentPath;
+	private int									indexPath;
+	private bool								stopped;
 	#endregion
 	
 	#region ACCESSORS
@@ -61,6 +64,9 @@ public class MovementController : MonoBehaviour {
 		posDestination = this.transform.position;
 		movementTransform = this.transform;
 
+		indexPath = 0;
+		stopped = true;
+
 		transformInAnchors = new Dictionary<Transform, ANCHOR_TYPE> ();
 	}
 
@@ -72,16 +78,26 @@ public class MovementController : MonoBehaviour {
 	#endregion
 	
 	#region METHODS_CUSTOM
-	public void GoTo(Transform target){
-		posDestination = target.position;
+	public void FollowPath(Transform targetParentPath){
+		if ((parentPath == null) || (parentPath != targetParentPath)){
+			parentPath = targetParentPath;
+		}
+
+		stopped = false;
 	}
 
-	public void GoTo(Vector3 targetPos){
+	public void GoTo(Vector3 targetPos, bool breakPath = false){
+		if (breakPath){
+			parentPath = null;
+		}
+
 		posDestination = targetPos;
+		stopped = false;
 	}
 
 	public void Stop(){
 		posDestination = movementTransform.position;
+		stopped = true;
 	}
 
 	public bool IsNearTo(MovementController movController){
@@ -124,15 +140,33 @@ public class MovementController : MonoBehaviour {
 	}
 
 	private void Move(){
-		navMeshAgent.SetDestination (posDestination);
+		if (!stopped){
+			if (parentPath != null){
+				CalculatePath();
+			}
 
-		if (lookAtTransform != null){
-			Vector3 direction = (lookAtTransform.position - movementTransform.position).normalized;
-			Quaternion lookRotation = Quaternion.LookRotation(direction);
-			movementTransform.rotation = Quaternion.Slerp(movementTransform.rotation, lookRotation, Time.deltaTime * navMeshAgent.angularSpeed);
+			if (lookAtTransform != null){
+				Vector3 direction = (lookAtTransform.position - movementTransform.position).normalized;
+				Quaternion lookRotation = Quaternion.LookRotation(direction);
+				movementTransform.rotation = Quaternion.Slerp(movementTransform.rotation, lookRotation, Time.deltaTime * navMeshAgent.angularSpeed);
+			}
 		}
 
+		navMeshAgent.SetDestination (posDestination);
 		onMove (navMeshAgent.velocity.magnitude);
+	}
+
+	private void CalculatePath(){
+		float distance = navMeshAgent.remainingDistance;
+
+		if (distance != Mathf.Infinity && navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete && distance == 0){
+			indexPath++;
+			if (indexPath >= parentPath.childCount){
+				indexPath = 0;
+			}
+		}
+
+		posDestination = parentPath.GetChild(indexPath).position;
 	}
 	#endregion
 }
