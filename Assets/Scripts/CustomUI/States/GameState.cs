@@ -15,6 +15,7 @@ public class GameState : StateApp {
 	public Text[]		dialogTexts;
 	public Text			responseText;
 	public Text			previousDialogText;
+	public Text			combatLogText;
 
 	private string		previousDialog;
 	private DQSResponse	response;
@@ -34,6 +35,8 @@ public class GameState : StateApp {
 		DQSManager.onResponseHasDialog += ReceiveDialog;
 		DQSManager.onFinishDialog += CloseDialog;
 		DQSManager.LoadMap (DQSManager.WORLD.TAVERN);
+
+		CombatLog.onCombatLogChange += HandleonCombatLogChange;
 
 		//Get PJs from user saved information
 		PCController[] pcArray = UserManager.InitPCs ();
@@ -57,8 +60,18 @@ public class GameState : StateApp {
 		rootApp.ChangeState (StateReferenceApp.TYPE_STATE.MAIN_MENU, AppScenes.SCENE_MAIN_MENU);
 	}
 
+	public void HandleonCombatLogChange (string[] logs){
+		string combatLogValue = "";
+		combatLogText.text = combatLogValue;
+
+		for(int i=0; i<logs.Length; i++){
+			combatLogValue += " - "+logs[i]+"\n";
+		}
+
+		combatLogText.text = combatLogValue;
+	}
+
 	public void ReceiveDialog(DQSResponse resp){
-		Debug.Log("....abriendo dialogo");
 		response = resp;
 
 		if (!containerDialogGO.activeSelf){
