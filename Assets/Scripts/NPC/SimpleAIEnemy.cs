@@ -32,6 +32,8 @@ public class SimpleAIEnemy : BTree {
 	private MovementController			movementController;
 	private DetectorFOV					detectorController;
 	private AnimationEnemyController	animationController;
+	private CombatAgent					combatAgent;
+	private Health						health;
 	private bool						newTurn;
 	#endregion
 	
@@ -44,11 +46,16 @@ public class SimpleAIEnemy : BTree {
 		detectorController = GetComponent<DetectorFOV> ();
 		detectorController.onDetectElement += DetectPC;
 		animationController = GetComponent<AnimationEnemyController> ();
+		combatAgent = GetComponent<CombatAgent> ();
+		combatAgent.onReciveDamage += HandleonReciveDamage;
+		health = GetComponent<Health> ();
+		health.onDeath += HandleonDeath;
 
 		TurnManager.onTurnBegin += OnTurnBegin;
 
 		StartCoroutine("ChangeMoving");
 	}
+	
 	#endregion
 
 	#region METHODS_CUSTOM
@@ -100,6 +107,9 @@ public class SimpleAIEnemy : BTree {
 		detectorController.onDetectElement -= DetectPC;
 		detectorController = null;
 		animationController = null;
+		combatAgent = null;
+		health.onDeath -= HandleonDeath;
+		health = null;
 
 		TurnManager.onTurnBegin -= OnTurnBegin;
 
@@ -175,7 +185,7 @@ public class SimpleAIEnemy : BTree {
 
 //Approach
 	private bool ApproachCondition(){
-		return (!pcController.IsSurrounded && !movementController.IsNearTo(pcController.GetComponent<MovementController>()));
+		return (!pcController.IsSurrounded && !movementController.IsNearTo(pcController.GetComponent<MovementController>()) && !animationController.IsAttacking);
 	}
 		
 	private void ApproachAction(){
@@ -185,6 +195,15 @@ public class SimpleAIEnemy : BTree {
 	#endregion
 
 	#region METHODS_EVENT
+	private void HandleonDeath (){
+		CombatLog.Add ("Death: " + this.name);
+		Destroy (this.gameObject);
+	}
+
+	private void HandleonReciveDamage (int damage){
+		health.Damage (damage);
+	}
+
 	private IEnumerator ChangeMoving(){
 		while(true){
 			isMoving = true;
@@ -200,7 +219,8 @@ public class SimpleAIEnemy : BTree {
 	}
 
 	private void AttakToPC(){
-		Debug.Log ("Ataco al PC "+Time.time);
+		Debug.Log ("PC: " + pcController);
+		combatAgent.AttackTo(pcController.GetComponent<CombatAgent>());
 	}
 
 	private void OnTurnBegin(){

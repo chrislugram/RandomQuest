@@ -44,29 +44,29 @@ public class DiceShuffle {
 		FillDiceShuffle (ref shuffleD100, DICE.D100);
 	}
 
-	public static int Next(DICE typeDice){
+	public static int Next(DICE typeDice, int modifier = 0){
 		switch (typeDice) {
-			case DICE.D4:
-				return GetRandomFrom(ref shuffleD4, typeDice);
-				break;
-			case DICE.D6:
-				return GetRandomFrom(ref shuffleD6, typeDice);
-				break;
-			case DICE.D8:
-				return GetRandomFrom(ref shuffleD8, typeDice);
-				break;
-			case DICE.D10:
-				return GetRandomFrom(ref shuffleD10, typeDice);
-				break;
-			case DICE.D12:
-				return GetRandomFrom(ref shuffleD12, typeDice);
-				break;
-			case DICE.D20:
-				return GetRandomFrom(ref shuffleD20, typeDice);
-				break;
-			default:
-				return GetRandomFrom(ref shuffleD100, typeDice);
-				break;
+		case DICE.D4:
+			return GetRandomFrom(ref shuffleD4, typeDice) + modifier;
+			break;
+		case DICE.D6:
+			return GetRandomFrom(ref shuffleD6, typeDice) + modifier;
+			break;
+		case DICE.D8:
+			return GetRandomFrom(ref shuffleD8, typeDice) + modifier;
+			break;
+		case DICE.D10:
+			return GetRandomFrom(ref shuffleD10, typeDice) + modifier;
+			break;
+		case DICE.D12:
+			return GetRandomFrom(ref shuffleD12, typeDice) + modifier;
+			break;
+		case DICE.D20:
+			return GetRandomFrom(ref shuffleD20, typeDice) + modifier;
+			break;
+		default:
+			return GetRandomFrom(ref shuffleD100, typeDice) + modifier;
+			break;
 		}
 	}
 

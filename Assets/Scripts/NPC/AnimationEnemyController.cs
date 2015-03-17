@@ -28,6 +28,10 @@ public class AnimationEnemyController : MonoBehaviour {
 	public Action	EventAnimationAction{
 		set{ eventAnimation.eventAnimationAction = value; }
 	}
+
+	public bool 	IsAttacking{
+		get{ return animator.GetCurrentAnimatorStateInfo(0).IsName("03_attack"); }
+	}
 	#endregion
 	
 	#region METHODS_UNITY

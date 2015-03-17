@@ -27,6 +27,7 @@ public class PCController : MonoBehaviour {
 
 	private MovementController	movementPCController;
 	private Health				healthPCController;
+	private CombatAgent			combatAgentPCController;
 	#endregion
 	
 	#region ACCESSORS
@@ -57,11 +58,17 @@ public class PCController : MonoBehaviour {
 	void Awake(){
 		movementPCController = GetComponent<MovementController> ();
 		healthPCController = GetComponent<Health> ();
+		healthPCController.onDeath += HandleonDeath;
+		combatAgentPCController = GetComponent<CombatAgent> ();
+		combatAgentPCController.onReciveDamage += HandleonReciveDamage;
 	}
-
+	
 	void OnDestroy(){
 		movementPCController = null;
+		healthPCController.onDeath -= HandleonDeath;
 		healthPCController = null;
+		combatAgentPCController.onReciveDamage -= HandleonReciveDamage;
+		combatAgentPCController = null;
 	}
 	#endregion
 	
@@ -72,5 +79,14 @@ public class PCController : MonoBehaviour {
 	#endregion
 
 	#region METHODS_CUSTOM
+	private void HandleonDeath (){
+		CombatLog.Add ("PC derrotado");
+		Destroy (this.gameObject);
+	}
+
+	private void HandleonReciveDamage (int damage){
+		Debug.Log ("PC recibe: " + damage);
+		healthPCController.Damage (damage);
+	}
 	#endregion
 }

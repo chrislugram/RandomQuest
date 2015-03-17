@@ -29,6 +29,7 @@ public class RandomQuestApp : RootApp {
 		UserManager.Init ();
 		TaskManager.Init ();
 		LocalizationApp.Init ();
+		DiceShuffle.Init ();
 		
 		//Init UI states
 		states = new Dictionary<StateReferenceApp.TYPE_STATE, string> ();
