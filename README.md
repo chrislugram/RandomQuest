@@ -3,11 +3,11 @@
 ## General
 RandomQuest is a demo project created by Christian Lugo. It's made with Unity3D 5.0. The project is configured (and tested) to run in Windows 8.
 
-## What is in this project
+## What is in this project?
 
 In this project you can found different tools for general game development. I use typical RPG-games scenes to test the tools. Next, a list of most interesting tools included in the project:
 
-  - StateApp: It's a simple solution to control the screens flow of the application. This solutions was used in few development of mobile apps.
+  - StateApp: It's a simple solution to control the screens flow of the application. This solution was used in few developments of mobile apps.
   - OrbitCamera: Specific solution to move the camera in a RPG-game with 3D graphics. 
     - With WASD can to move the pivot which look at the camera.
     - With right-click can to move the Character.
