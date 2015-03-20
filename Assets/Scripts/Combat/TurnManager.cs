@@ -27,6 +27,8 @@ public class TurnManager : MonoBehaviour {
 		DontDestroyOnLoad (this.gameObject);
 
 		timeAccumulated = 0;
+
+		InputController.onPauseAction += Pause;
 	}
 
 	void Update(){
@@ -36,13 +38,20 @@ public class TurnManager : MonoBehaviour {
 	}
 
 	void OnDestroy(){
-		Pause ();
+		InputController.onPauseAction -= Pause;
 	}
 	#endregion
 
 	#region METHODS_CUSTOM
 	public void Pause(){
 		paused = !paused;
+
+		if (paused){
+			Time.timeScale = 0;
+		}else{
+			Time.timeScale = 1;
+		}
+
 	}
 
 	private void UpdateTurn(){

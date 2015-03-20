@@ -15,6 +15,7 @@ public class InputController : MonoBehaviour {
 	public static event Action			onRightCameraOffsetAction = delegate{};
 	public static event Action			onUpCameraOffsetAction = delegate{};
 	public static event Action			onDownCameraOffsetAction = delegate{};
+	public static event Action			onPauseAction = delegate{};
 	public static event Action			onOrbitCamera = delegate{};
 	public static event Action<float>	onWheelScroll = delegate{};
 
@@ -126,6 +127,8 @@ public class InputController : MonoBehaviour {
 			onUpCameraOffsetAction();
 		}else if (Input.GetKey(KeyCode.S)){
 			onDownCameraOffsetAction();
+		}else if (Input.GetKeyDown(KeyCode.Space)){
+			onPauseAction();
 		}
 	}
 	#endregion

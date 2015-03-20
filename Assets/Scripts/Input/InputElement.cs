@@ -18,8 +18,8 @@ public class InputElement : MonoBehaviour {
 	#endregion
 	
 	#region METHODS_CUSTOM	
-	public virtual void 	OnDown(){}
-	public virtual void 	OnUp(){}
+	public virtual void 	OnDown (){}
+	public virtual void 	OnUp (){}
 	public virtual void 	OnMove(){}
 	#endregion
 }

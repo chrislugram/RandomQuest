@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// PC controller. Read PC save information and control all PC stats
+/// PC controller. Read PC save information and control all PC stats. This PCcontroller not contain AI
 /// </summary>
 public class PCController : MonoBehaviour {
 	#region STATIC_ENUM_CONSTANTS
@@ -28,6 +28,11 @@ public class PCController : MonoBehaviour {
 	private MovementController	movementPCController;
 	private Health				healthPCController;
 	private CombatAgent			combatAgentPCController;
+	private AnimationController	animationPCController;
+
+	private bool				newTurn;
+
+	private SimpleAIEnemy		targetEnemyController;
 	#endregion
 	
 	#region ACCESSORS
@@ -61,14 +66,42 @@ public class PCController : MonoBehaviour {
 		healthPCController.onDeath += HandleonDeath;
 		combatAgentPCController = GetComponent<CombatAgent> ();
 		combatAgentPCController.onReciveDamage += HandleonReciveDamage;
+		animationPCController = GetComponent<AnimationController> ();
+
+		TurnManager.onTurnBegin += OnTurnBegin;
 	}
-	
+
+	void Update(){
+		if (targetEnemyController != null){
+			animationPCController.Alert (true);
+
+			if (!movementPCController.IsNearTo(targetEnemyController.GetComponent<MovementController>()) && !animationPCController.IsAttacking){
+				animationPCController.Attack (false);
+				movementPCController.LookAt(targetEnemyController.transform);
+				movementPCController.GoTo (targetEnemyController.GetComponent<MovementController> ().GetAnchor (this.transform), true);
+			}else{
+				animationPCController.Attack (true);
+				if (animationPCController.HasEmptyAction){
+					animationPCController.EventAnimationAction = AttakToEnemyTarget;
+				}
+
+				if (newTurn){
+					animationPCController.NewTurn();
+					newTurn = false;
+				}
+			}
+		}
+	}
+
 	void OnDestroy(){
+		TurnManager.onTurnBegin -= OnTurnBegin;
+
 		movementPCController = null;
 		healthPCController.onDeath -= HandleonDeath;
 		healthPCController = null;
 		combatAgentPCController.onReciveDamage -= HandleonReciveDamage;
 		combatAgentPCController = null;
+		animationPCController = null;
 	}
 	#endregion
 	
@@ -76,9 +109,15 @@ public class PCController : MonoBehaviour {
 	public void MoveTo(Vector3 posDestination){
 		movementPCController.posDestination = posDestination;
 	}
+
+	public void SetEnemyTarget(SimpleAIEnemy aiEnemy){
+		targetEnemyController = aiEnemy;
+		targetEnemyController.GetComponent<CombatAgent> ().SetTargetSelector (true);
+
+	}
 	#endregion
 
-	#region METHODS_CUSTOM
+	#region METHODS_EVENTS
 	private void HandleonDeath (){
 		CombatLog.Add ("PC derrotado");
 		Destroy (this.gameObject);
@@ -87,6 +126,15 @@ public class PCController : MonoBehaviour {
 	private void HandleonReciveDamage (int damage){
 		Debug.Log ("PC recibe: " + damage);
 		healthPCController.Damage (damage);
+	}
+
+	private void AttakToEnemyTarget(){
+		Debug.Log ("EnemyTarget: " + targetEnemyController);
+		combatAgentPCController.AttackTo(targetEnemyController.GetComponent<CombatAgent>());
+	}
+
+	private void OnTurnBegin(){
+		newTurn = true;
 	}
 	#endregion
 }

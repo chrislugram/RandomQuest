@@ -14,6 +14,8 @@ public class CombatAgent : MonoBehaviour {
 
 	[SerializeField]
 	public CombatInfo			combatInfo;
+
+	public GameObject			combatTargetSelector;
 	#endregion
 	
 	#region ACCESSORS
@@ -48,6 +50,10 @@ public class CombatAgent : MonoBehaviour {
 	public void ReciveDamage(int damage){
 		Debug.Log ("soy " + this.name + ", recibo " + damage);
 		onReciveDamage (damage);
+	}
+
+	public void SetTargetSelector(bool targetSelectorFlag){
+		combatTargetSelector.SetActive (targetSelectorFlag);
 	}
 	#endregion
 	

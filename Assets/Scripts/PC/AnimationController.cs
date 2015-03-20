@@ -1,23 +1,37 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 /// <summary>
-/// AnimationController. Manage the animations parameters of PC
+/// AnimationController. Manage the animations parameters of PC and Enemy sample
 /// </summary>
 public class AnimationController : MonoBehaviour {
 	#region STATIC_ENUM_CONSTANTS
 	public static readonly string	PARAMETER_VELOCITY = "velocity";
 	public static readonly string	PARAMETER_DANGER = "danger";
 	public static readonly string	PARAMETER_ATTACK = "attack";
+	public static readonly string	PARAMETER_TURN_BEGIN = "turn_begin";
 	#endregion
 	
 	#region FIELDS
 	public Animator				animator;
+	public EventAnimation		eventAnimation;
 
 	private MovementController 	movementController;
 	#endregion
 	
 	#region ACCESSORS
+	public bool		HasEmptyAction{
+		get{ return (eventAnimation.eventAnimationAction == null); }
+	}
+
+	public Action	EventAnimationAction{
+		set{ eventAnimation.eventAnimationAction = value; }
+	}
+
+	public bool 	IsAttacking{
+		get{ return animator.GetCurrentAnimatorStateInfo(0).IsName("03_attack"); }
+	}
 	#endregion
 	
 	#region METHODS_UNITY
@@ -33,6 +47,21 @@ public class AnimationController : MonoBehaviour {
 	#endregion
 	
 	#region METHODS_CUSTOM
+	public void Attack(bool stateAttack){
+		animator.SetBool (PARAMETER_ATTACK, stateAttack);
+	}
+
+	public void Alert(bool stateAlert){
+		animator.SetBool (PARAMETER_DANGER, stateAlert);
+		if (!stateAlert){
+			animator.SetBool (PARAMETER_ATTACK, stateAlert);
+		}
+
+	}
+
+	public void NewTurn(){
+		animator.SetTrigger (PARAMETER_TURN_BEGIN);
+	}
 	#endregion
 	
 	#region METHODS_EVENTS

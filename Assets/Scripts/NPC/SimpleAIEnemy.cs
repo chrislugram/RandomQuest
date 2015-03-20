@@ -31,7 +31,7 @@ public class SimpleAIEnemy : BTree {
 	
 	private MovementController			movementController;
 	private DetectorFOV					detectorController;
-	private AnimationEnemyController	animationController;
+	private AnimationController			animationController;
 	private CombatAgent					combatAgent;
 	private Health						health;
 	private bool						newTurn;
@@ -45,7 +45,7 @@ public class SimpleAIEnemy : BTree {
 		movementController = GetComponent<MovementController> ();
 		detectorController = GetComponent<DetectorFOV> ();
 		detectorController.onDetectElement += DetectPC;
-		animationController = GetComponent<AnimationEnemyController> ();
+		animationController = GetComponent<AnimationController> ();
 		combatAgent = GetComponent<CombatAgent> ();
 		combatAgent.onReciveDamage += HandleonReciveDamage;
 		health = GetComponent<Health> ();
